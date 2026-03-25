@@ -1,0 +1,45 @@
+.dashboard-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .dashboard-card {
+    text-align: center;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    width: 80%;
+    max-width: 700px;
+  }
+  
+  .dashboard-card h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-card p {
+    color: #6b7280;
+    margin-bottom: 30px;
+  }
+  
+  .stats {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .stat-box {
+    background: #f3f4f6;
+    padding: 20px;
+    border-radius: 12px;
+    width: 30%;
+  }
+  
+  .stat-box h3 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #2563eb;
+  }
+  
