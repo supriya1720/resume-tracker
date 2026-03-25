@@ -1,9 +1,12 @@
 const Task = require("../models/Task");
 
 exports.addTask = async (req, res) => {
+
   const task = await Task.create({
     user: req.user,
-    title: req.body.title
+    title: req.body.title,
+    status: req.body.status,
+    dueDate: req.body.dueDate
   });
 
   res.json(task);
@@ -20,4 +23,19 @@ exports.deleteTask = async (req, res) => {
   });
 
   res.json({ message: "Task deleted" });
+};
+exports.updateTaskStatus = async (req, res) => {
+
+  const task = await Task.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      user: req.user.id
+    },
+    {
+      status: req.body.status
+    },
+    { new: true }
+  );
+
+  res.json(task);
 };

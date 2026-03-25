@@ -1,11 +1,35 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware");
-const { addTask, getTasks, deleteTask } = require("../controllers/taskController");
 
+const Task = require("../models/Task"); // ✅ ADD THIS
+
+const {
+  addTask,
+  getTasks,
+  deleteTask,
+  updateTaskStatus
+} = require("../controllers/taskController");
 
 router.post("/", auth, addTask);
 router.get("/", auth, getTasks);
 router.delete("/:id", auth, deleteTask);
+
+router.put("/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    res.json(updatedTask);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
