@@ -17,6 +17,7 @@ app.use("/api/resumes", require("./routes/resumeRoutes"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 app.use("/uploads", express.static("uploads"));
+app.use("/api/applications", require("./routes/applicationRoutes"));
 
 
 // Test route

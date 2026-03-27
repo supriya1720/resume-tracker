@@ -1,108 +1,77 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import API from "../services/api";
 import "../components/Card.css";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
-  const [company, setCompany] = useState("");
-  const [role, setRole] = useState("");
-  const [status, setStatus] = useState("");
+  const [appliedJobs, setAppliedJobs] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetchJobs();
-  }, []);
 
+    // Handle new applied job coming from ApplyJob
+    if (location.state?.newAppliedJob) {
+      setAppliedJobs((prev) => [...prev, location.state.newAppliedJob]);
+      window.history.replaceState({}, document.title); // clear state
+    } else {
+      fetchAppliedJobs();
+    }
+  }, [location.state]);
+
+  // ✅ Simple fetch for first page of public jobs
   const fetchJobs = async () => {
+    try {
+      const res = await axios.get(
+        "https://api.joinrise.io/api/v1/jobs/public?page=1&limit=50"
+      );
+      const jobsList = res.data?.result?.jobs || [];
+      setJobs(jobsList);
+    } catch (err) {
+      console.error("Error fetching jobs:", err);
+      setJobs([]);
+    }
+  };
+
+  const fetchAppliedJobs = async () => {
     const res = await API.get("/jobs");
-    setJobs(res.data);
+    setAppliedJobs(res.data);
   };
 
-  const addJob = async () => {
-    if (!company || !role || !status) return;
-
-    await API.post("/jobs", {
-      company,
-      role,
-      status,
-    });
-
-    setCompany("");
-    setRole("");
-    setStatus("");
-    fetchJobs();
+  const isApplied = (job) => {
+    return appliedJobs.some(
+      (j) => j.role === job.title && j.company === job.owner?.companyName
+    );
   };
-  const deleteJob = async (id) => {
-    await API.delete(`/jobs/${id}`);
-    fetchJobs();
-  };
-  
 
   return (
     <div className="card">
-      <h3>Jobs</h3>
+      <h3>Available Jobs</h3>
+      <div className="jobs-grid">
+        {jobs.map((job, index) => (
+          <div key={index} className="job-card">
+            <h4>{job.title}</h4>
+            <p className="company">{job.owner?.companyName}</p>
+            <p className="location">{job.location || "Remote"}</p>
 
-      <div className="form">
-        <input
-          placeholder="Company"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-        />
-        <input
-          placeholder="Role"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        />
-       <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            <button
+              className={isApplied(job) ? "applied-btn" : "apply-btn"}
+              onClick={() => {
+                if (isApplied(job)) {
+                  alert("Already applied");
+                  return;
+                }
+                navigate("/home/apply-job", { state: { job } });
+              }}
             >
-            <option value="">Select Status</option>
-            <option value="Applied">Applied</option>
-            <option value="Online Assessment">Online Assessment</option>
-            <option value="Interview">Interview</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Selected">Selected</option>
-        </select>
-        <button onClick={addJob}>Add</button>
-      </div>
-
-      <div className="job-table">
-
-        <div className="job-header">
-        <span>Company</span>
-        <span>Role</span>
-        <span>Status</span>
-        <span></span>
-        </div>
-
-        {jobs.map((job) => (
-        <div key={job._id} className="job-row">
-
-        <span>{job.company}</span>
-      
-        <span>{job.role}</span>
-      
-        <span>
-          <span className={`status-badge ${job.status.replace(" ", "-")}`}>
-            {job.status}
-          </span>
-        </span>
-      
-        <span>
-          <button
-            className="delete-btn"
-            onClick={() => deleteJob(job._id)}
-          >
-            🗑
-          </button>
-        </span>
-      
-      </div>
-     
+              {isApplied(job) ? "Applied" : "Apply"}
+            </button>
+          </div>
         ))}
-
-        </div>
-
+      </div>
     </div>
   );
 }

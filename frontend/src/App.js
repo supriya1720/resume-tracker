@@ -8,6 +8,7 @@ import Jobs from "./pages/Jobs";
 import Resumes from "./pages/Resumes";
 import Tasks from "./pages/Tasks";
 import PrivateRoute from "./routes/PrivateRoute";
+import ApplyJob from "./pages/ApplyJob";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="jobs" element={<Jobs />} />
           <Route path="resumes" element={<Resumes />} />
           <Route path="tasks" element={<Tasks />} />
+          <Route path="apply-job" element={<ApplyJob />} />
         </Route>
       </Routes>
     </BrowserRouter>
