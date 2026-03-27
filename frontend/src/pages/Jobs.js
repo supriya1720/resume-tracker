@@ -11,18 +11,9 @@ export default function Jobs() {
   const location = useLocation();
 
   useEffect(() => {
-    fetchJobs();
-
-    // Handle new applied job coming from ApplyJob
-    if (location.state?.newAppliedJob) {
-      setAppliedJobs((prev) => [...prev, location.state.newAppliedJob]);
-      window.history.replaceState({}, document.title); // clear state
-    } else {
-      fetchAppliedJobs();
-    }
-  }, [location.state]);
-
-  // ✅ Simple fetch for first page of public jobs
+    fetchJobs();         
+    fetchAppliedJobs();  
+  }, []);
   const fetchJobs = async () => {
     try {
       const res = await axios.get(
@@ -37,13 +28,20 @@ export default function Jobs() {
   };
 
   const fetchAppliedJobs = async () => {
-    const res = await API.get("/jobs");
-    setAppliedJobs(res.data);
+    try {
+      const res = await API.get("/applications"); // this should return all applied jobs
+      setAppliedJobs(res.data || []);
+    } catch (err) {
+      console.error("Error fetching applied jobs:", err);
+      setAppliedJobs([]);
+    }
   };
 
   const isApplied = (job) => {
     return appliedJobs.some(
-      (j) => j.role === job.title && j.company === job.owner?.companyName
+      (applied) =>
+        applied.role === job.title &&
+        applied.company === job.owner?.companyName
     );
   };
 

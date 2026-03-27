@@ -24,6 +24,8 @@ export default function ApplyJob() {
 
   const fetchResumes = async () => {
     const res = await API.get("/resumes");
+    console.log("RESUMES RESPONSE:", res.data);   // add this line
+
     setResumes(res.data);
   };
 
@@ -34,11 +36,16 @@ export default function ApplyJob() {
       company: job.owner?.companyName,
       role: job.title,
     });
-
+  
     alert("Application submitted!");
-
+  
     navigate("/home/jobs", {
-      state: { newAppliedJob: job._id }, // send job ID to mark applied immediately
+      state: {
+        newAppliedJob: {
+          role: job.title,
+          company: job.owner?.companyName,
+        },
+      },
     });
   };
 
@@ -110,11 +117,11 @@ export default function ApplyJob() {
           <label>Select Resume</label>
           <select onChange={(e) => setForm({ ...form, resume: e.target.value })}>
             <option value="">Select Resume</option>
-            {resumes.map((r) => (
-              <option key={r._id} value={r.fileName}>
-                {r.fileName}
-              </option>
-            ))}
+                {resumes.map((r) => (
+                    <option key={r._id} value={r.file}>
+                        {r.file}
+                    </option>
+                    ))}
           </select>
         </div>
 
