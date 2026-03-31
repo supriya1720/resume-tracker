@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware");
-
 const Task = require("../models/Task"); // ✅ ADD THIS
 
 const {
   addTask,
   getTasks,
   deleteTask,
-  updateTaskStatus
+  updateTaskStatus,
+  addSuggestedTasks
 } = require("../controllers/taskController");
 
 router.post("/", auth, addTask);
+router.post("/from-skills", auth, addSuggestedTasks);
 router.get("/", auth, getTasks);
 router.delete("/:id", auth, deleteTask);
 

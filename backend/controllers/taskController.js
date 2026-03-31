@@ -39,3 +39,26 @@ exports.updateTaskStatus = async (req, res) => {
 
   res.json(task);
 };
+
+exports.addSuggestedTasks = async (req, res) => {
+  try {
+    const { missingSkills } = req.body;
+
+    if (!missingSkills || !Array.isArray(missingSkills)) {
+      return res.status(400).json({ error: "missingSkills array is required" });
+    }
+
+    const tasksToCreate = missingSkills.map(skill => ({
+      user: req.user,
+      title: `Learn ${skill}`,
+      status: "Pending"
+    }));
+
+    const createdTasks = await Task.insertMany(tasksToCreate);
+
+    res.json(createdTasks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to generate tasks from skills" });
+  }
+};

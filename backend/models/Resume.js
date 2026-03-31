@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const resumeSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   file: String,
+  parsedData: {
+    sections: { type: Map, of: String },
+    skills: [String]
+  },
   createdAt: { type: Date, default: Date.now }
 });
 
