@@ -81,9 +81,66 @@ exports.analyzeResume = async (req, res) => {
       });
     }
 
+    // Calculate Readiness Score & Suggestions
+    let readinessScore = 0;
+    const suggestions = [];
+
+    // Check for essential sections
+    if (sections.has("Experience")) {
+      readinessScore += 25;
+    } else {
+      suggestions.push("Add an 'Experience' section describing your past roles and responsibilities.");
+    }
+
+    if (sections.has("Education")) {
+      readinessScore += 20;
+    } else {
+      suggestions.push("Include an 'Education' section detailing your academic background.");
+    }
+
+    if (sections.has("Skills") || extractedSkills.length > 0) {
+      readinessScore += 20;
+    } else {
+      suggestions.push("Add a 'Skills' section listing your technical and soft skills.");
+    }
+
+    if (sections.has("Projects")) {
+      readinessScore += 15;
+    } else {
+      suggestions.push("Consider adding a 'Projects' section to showcase practical applications of your skills.");
+    }
+
+    if (sections.has("Summary")) {
+      // If summary is just empty string or very short, it might be the default fallback
+      const summaryText = sections.get("Summary");
+      if (summaryText && summaryText.trim().length > 20) {
+        readinessScore += 10;
+      } else {
+        suggestions.push("Add a professional 'Summary' to provide a quick overview of your profile.");
+      }
+    } else {
+      suggestions.push("Add a professional 'Summary' to provide a quick overview of your profile.");
+    }
+
+    // Reward for having multiple skills
+    if (extractedSkills.length >= 5) {
+      readinessScore += 10;
+    } else if (extractedSkills.length > 0) {
+      readinessScore += 5;
+      suggestions.push("Expand your skills list to include more specific and relevant technologies.");
+    }
+
+    if (readinessScore >= 80 && suggestions.length === 0) {
+      suggestions.push("Your resume looks great and is structurally complete!");
+    } else if (readinessScore >= 80) {
+      suggestions.push("Your resume is well-structured! Consider reviewing the above suggestions for further improvement.");
+    }
+
     const parsedData = {
       sections: Object.fromEntries(sections),
-      skills: extractedSkills
+      skills: extractedSkills,
+      readinessScore,
+      suggestions
     };
 
     const resume = await Resume.create({

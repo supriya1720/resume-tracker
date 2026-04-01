@@ -5,7 +5,9 @@ const resumeSchema = new mongoose.Schema({
   file: String,
   parsedData: {
     sections: { type: Map, of: String },
-    skills: [String]
+    skills: [String],
+    readinessScore: { type: Number, default: 0 },
+    suggestions: [String]
   },
   createdAt: { type: Date, default: Date.now }
 });
