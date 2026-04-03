@@ -389,3 +389,63 @@
     margin: 4px 0;
     font-size: 14px;
   }
+  /* Resume Analysis Styles */
+  .resume-item {
+    margin-bottom: 10px;
+  }
+
+  .resume-analysis {
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .readiness-score {
+    transition: transform 0.2s ease;
+  }
+
+  .readiness-score:hover {
+    transform: scale(1.05);
+  }
+
+  .expand-btn:hover {
+    opacity: 1 !important;
+    transform: scale(1.1);
+  }
+
+  /* Match Analysis Styles */
+  .match-analysis {
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .match-analysis h4 {
+    color: #1f2937;
+  }
+
+  /* Skill Badge Hover Effects */
+  .match-analysis span[style*="background"] {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .match-analysis span[style*="background"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }

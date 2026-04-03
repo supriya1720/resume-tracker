@@ -13,7 +13,8 @@ export default function Resumes() {
     const formData = new FormData();
     formData.append("resume", file);
   
-    await API.post("/resumes", formData);
+   // Use the analyze endpoint to parse and analyze the resume
+   await API.post("/resumes/analyze-resume", formData);
   
     window.location.reload(); // refresh list after upload
   };
