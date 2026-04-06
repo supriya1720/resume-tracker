@@ -8,35 +8,39 @@ export default function Home() {
   return (
     <div className="layout">
       <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="brand-mark">RT</div>
+          <div>
+            <h2>Resume Tracker</h2>
+            <p>Placement prep made simple</p>
+          </div>
+        </div>
 
         <div className="menu">
-          <p
+          <button
             className={location.pathname === "/home" ? "active" : ""}
             onClick={() => navigate("/home")}
           >
             Dashboard
-          </p>
-
-          <p
+          </button>
+          <button
             className={location.pathname === "/home/jobs" ? "active" : ""}
             onClick={() => navigate("/home/jobs")}
           >
             Jobs
-          </p>
-
-          <p
+          </button>
+          <button
             className={location.pathname === "/home/resumes" ? "active" : ""}
             onClick={() => navigate("/home/resumes")}
           >
             Resumes
-          </p>
-
-          <p
+          </button>
+          <button
             className={location.pathname === "/home/tasks" ? "active" : ""}
             onClick={() => navigate("/home/tasks")}
           >
             Tasks
-          </p>
+          </button>
         </div>
       </aside>
 
